@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Handwritten Digit Recognizer</title>
+<!-- TensorFlow.js from CDN -->
+<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.20.0/dist/tf.min.js"></script>
+<style>
+  body { font-family: Arial, sans-serif; text-align: center; background: #1e1e1e; color: #eee; }
+  h1 { margin-top: 20px; }
+  #canvas { background: #000; border: 2px solid #888; cursor: crosshair; touch-action: none; }
+  .panel { margin: 15px; }
+  button { padding: 10px 20px; margin: 5px; font-size: 16px; cursor: pointer; }
+  #status { margin: 10px; min-height: 24px; color: #9cf; }
+  #prediction { font-size: 56px; font-weight: bold; color: #6f6; min-height: 70px; }
+  #probs { display: inline-block; text-align: left; font-family: monospace; }
+  .bar { display: inline-block; height: 12px; background: #6cf; vertical-align: middle; }
+</style>
+</head>
+<body>
+  <h1>Handwritten Digit Recognizer</h1>
+  <div id="status">Loading TensorFlow.js...</div>
+
+  <div class="panel">
+    <!-- Drawing canvas: 280x280 (10x the MNIST 28x28 input) -->
+    <canvas id="canvas" width="280" height="280"></canvas>
+  </div>
+
+  <div class="panel">
+    <button id="predictBtn" disabled>Predict</button>
+    <button id="clearBtn">Clear</button>
+  </div>
+
+  <div id="prediction">?</div>
+  <div id="probs"></div>
+
+<script>
+// ===== Global state =====
+let model = null;
+const statusEl = document.getElementById('status');
+const predictionEl = document.getElementById('prediction');
+const probsEl = document.getElementById('probs');
+const predictBtn = document.getElementById('predictBtn');
+const clearBtn = document.getElementById('clearBtn');
+
+// ===== Drawing canvas setup =====
+const canvas = document.getElementById('canvas');
+const ctx = canvas.getContext('2d');
+ctx.fillStyle = 'black';
+ctx.fillRect(0, 0, canvas.width, canvas.height);
+ctx.strokeStyle = 'white';
+ctx.lineWidth = 18;
+ctx.lineCap = 'round';
+ctx.lineJoin = 'round';
+
+let drawing = false;
+function getPos(e) {
+  const rect = canvas.getBoundingClientRect();
+  const t = e.touches ? e.touches[0] : e;
+  return { x: t.clientX - rect.left, y: t.clientY - rect.top };
+}
+function startDraw(e) { drawing = true; const p = getPos(e); ctx.beginPath(); ctx.moveTo(p.x, p.y); e.preventDefault(); }
+function moveDraw(e)  { if (!drawing) return; const p = getPos(e); ctx.lineTo(p.x, p.y); ctx.stroke(); e.preventDefault(); }
+function endDraw(e)   { drawing = false; e && e.preventDefault && e.preventDefault(); }
+
+canvas.addEventListener('mousedown', startDraw);
+canvas.addEventListener('mousemove', moveDraw);
+canvas.addEventListener('mouseup',   endDraw);
+canvas.addEventListener('mouseleave',endDraw);
+canvas.addEventListener('touchstart', startDraw);
+canvas.addEventListener('touchmove',  moveDraw);
+canvas.addEventListener('touchend',   endDraw);
+
+clearBtn.addEventListener('click', () => {
+  ctx.fillStyle = 'black';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  predictionEl.textContent = '?';
+  probsEl.innerHTML = '';
+});
+
+// ===== MNIST data loader =====
+// Uses the sprite sheet hosted by the official tfjs-examples repo:
+// 65000 images of 28x28 packed into a single PNG, plus a labels file.
+const MNIST_IMAGES_SPRITE_PATH =
+  'https://storage.googleapis.com/learnjs-data/model-builder/mnist_images.png';
+const MNIST_LABELS_PATH =
+  'https://storage.googleapis.com/learnjs-data/model-builder/mnist_labels_uint8';
+const IMAGE_SIZE = 784;       // 28*28
+const NUM_CLASSES = 10;
+const NUM_DATASET_ELEMENTS = 65000;
+const NUM_TRAIN_ELEMENTS = 55000;
+
+class MnistData {
+  async load() {
+    // Load the sprite image and decode it into a Float32Array of grayscale pixels.
+    const img = new Image();
+    img.crossOrigin = '';
+    const imgRequest = new Promise((resolve, reject) => {
+      img.onload = () => {
+        const datasetBytesBuffer = new ArrayBuffer(NUM_DATASET_ELEMENTS * IMAGE_SIZE * 4);
+        const chunkSize = 5000;
+        const off = document.createElement('canvas');
+        off.width = img.width;
+        off.height = chunkSize;
+        const offCtx = off.getContext('2d');
+        for (let i = 0; i < NUM_DATASET_ELEMENTS / chunkSize; i++) {
+          const datasetBytesView = new Float32Array(
+            datasetBytesBuffer,
+            i * IMAGE_SIZE * chunkSize * 4,
+            IMAGE_SIZE * chunkSize
+          );
+          offCtx.drawImage(img, 0, i * chunkSize, img.width, chunkSize, 0, 0, img.width, chunkSize);
+          const imageData = offCtx.getImageData(0, 0, off.width, off.height);
+          // The sprite is grayscale stored in RGBA; take the red channel and normalize to [0,1].
+          for (let j = 0; j < imageData.data.length / 4; j++) {
+            datasetBytesView[j] = imageData.data[j * 4] / 255;
+          }
+        }
+        this.datasetImages = new Float32Array(datasetBytesBuffer);
+        resolve();
+      };
+      img.onerror = reject;
+      img.src = MNIST_IMAGES_SPRITE_PATH;
+    });
+
+    const labelsRequest = fetch(MNIST_LABELS_PATH).then(r => r.arrayBuffer());
+    const [, labelsResponse] = await Promise.all([imgRequest, labelsRequest]);
+    this.datasetLabels = new Uint8Array(labelsResponse);
+
+    // Slice into training and test sets.
+    this.trainImages = this.datasetImages.slice(0, IMAGE_SIZE * NUM_TRAIN_ELEMENTS);
+    this.testImages  = this.datasetImages.slice(IMAGE_SIZE * NUM_TRAIN_ELEMENTS);
+    this.trainLabels = this.datasetLabels.slice(0, NUM_CLASSES * NUM_TRAIN_ELEMENTS);
+    this.testLabels  = this.datasetLabels.slice(NUM_CLASSES * NUM_TRAIN_ELEMENTS);
+  }
+
+  // Return a random batch from the training set as tensors.
+  nextTrainBatch(batchSize) {
+    const batchImagesArray = new Float32Array(batchSize * IMAGE_SIZE);
+    const batchLabelsArray = new Uint8Array(batchSize * NUM_CLASSES);
+    for (let i = 0; i < batchSize; i++) {
+      const idx = Math.floor(Math.random() * NUM_TRAIN_ELEMENTS);
+      batchImagesArray.set(
+        this.trainImages.slice(idx * IMAGE_SIZE, (idx + 1) * IMAGE_SIZE),
+        i * IMAGE_SIZE
+      );
+      batchLabelsArray.set(
+        this.trainLabels.slice(idx * NUM_CLASSES, (idx + 1) * NUM_CLASSES),
+        i * NUM_CLASSES
+      );
+    }
+    const xs     = tf.tensor4d(batchImagesArray, [batchSize, 28, 28, 1]);
+    const labels = tf.tensor2d(batchLabelsArray, [batchSize, NUM_CLASSES]);
+    return { xs, labels };
+  }
+}
+
+// ===== Build a small CNN =====
+function buildModel() {
+  const m = tf.sequential();
+  m.add(tf.layers.conv2d({
+    inputShape: [28, 28, 1],
+    kernelSize: 3, filters: 16, activation: 'relu',
+  }));
+  m.add(tf.layers.maxPooling2d({ poolSize: 2 }));
+  m.add(tf.layers.conv2d({ kernelSize: 3, filters: 32, activation: 'relu' }));
+  m.add(tf.layers.maxPooling2d({ poolSize: 2 }));
+  m.add(tf.layers.flatten());
+  m.add(tf.layers.dense({ units: 64, activation: 'relu' }));
+  m.add(tf.layers.dense({ units: 10, activation: 'softmax' }));
+  m.compile({
+    optimizer: tf.train.adam(),
+    loss: 'categoricalCrossentropy',
+    metrics: ['accuracy'],
+  });
+  return m;
+}
+
+// ===== Training loop =====
+async function train(model, data) {
+  const BATCH_SIZE = 128;
+  const STEPS = 200; // ~200 mini-batches is enough to reach ~98% on MNIST
+  for (let i = 0; i < STEPS; i++) {
+    const batch = data.nextTrainBatch(BATCH_SIZE);
+    const history = await model.trainOnBatch(batch.xs, batch.labels);
+    batch.xs.dispose();
+    batch.labels.dispose();
+    if (i % 10 === 0) {
+      const loss = Array.isArray(history) ? history[0] : history;
+      statusEl.textContent = `Training... step ${i}/${STEPS}  loss=${loss.toFixed(4)}`;
+      await tf.nextFrame();
+    }
+  }
+}
+
+// ===== Convert the drawing canvas to a 28x28 input tensor =====
+function canvasToTensor() {
+  return tf.tidy(() => {
+    // Read raw pixels from the 280x280 canvas.
+    const img = tf.browser.fromPixels(canvas, 1).toFloat().div(255);
+    // Downscale to 28x28 (matching MNIST input size).
+    const resized = tf.image.resizeBilinear(img, [28, 28]);
+    // Add a batch dimension: [1, 28, 28, 1].
+    return resized.expandDims(0);
+  });
+}
+
+// ===== Prediction =====
+async function predict() {
+  if (!model) return;
+  const input = canvasToTensor();
+  const logits = model.predict(input);
+  const probs = await logits.data();
+  input.dispose();
+  logits.dispose();
+
+  let best = 0;
+  for (let i = 1; i < probs.length; i++) if (probs[i] > probs[best]) best = i;
+  predictionEl.textContent = String(best);
+
+  // Show a tiny bar chart of class probabilities.
+  let html = '';
+  for (let i = 0; i < 10; i++) {
+    const pct = (probs[i] * 100).toFixed(1);
+    const w = Math.max(1, Math.round(probs[i] * 200));
+    html += `${i}: <span class="bar" style="width:${w}px"></span> ${pct}%<br>`;
+  }
+  probsEl.innerHTML = html;
+}
+predictBtn.addEventListener('click', predict);
+
+// ===== Bootstrap =====
+(async () => {
+  try {
+    statusEl.textContent = 'Loading MNIST dataset...';
+    const data = new MnistData();
+    await data.load();
+
+    statusEl.textContent = 'Building model...';
+    model = buildModel();
+
+    statusEl.textContent = 'Training model (about 30-60 seconds)...';
+    await train(model, data);
+
+    statusEl.textContent = 'Ready! Draw a digit (0-9) and click Predict.';
+    predictBtn.disabled = false;
+  } catch (err) {
+    statusEl.textContent = 'Error: ' + err.message;
+    console.error(err);
+  }
+})();
+</script>
+</body>
+</html>
