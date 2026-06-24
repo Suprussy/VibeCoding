@@ -1,0 +1,325 @@
+[
+  {
+    "nickname": "민준",
+    "category": "bible",
+    "score": 8,
+    "totalTime": 142,
+    "date": "2026-06-10",
+    "answers": [
+      { "questionId": "bible_001", "selected": 1, "correct": true },
+      { "questionId": "bible_002", "selected": 1, "correct": true },
+      { "questionId": "bible_003", "selected": 2, "correct": true },
+      { "questionId": "bible_004", "selected": 0, "correct": false },
+      { "questionId": "bible_005", "selected": 3, "correct": true },
+      { "questionId": "bible_006", "selected": 2, "correct": true },
+      { "questionId": "bible_007", "selected": 1, "correct": true },
+      { "questionId": "bible_008", "selected": 1, "correct": true },
+      { "questionId": "bible_009", "selected": 2, "correct": true },
+      { "questionId": "bible_010", "selected": 0, "correct": false }
+    ]
+  },
+  {
+    "nickname": "민준",
+    "category": "bible",
+    "score": 9,
+    "totalTime": 125,
+    "date": "2026-06-14",
+    "answers": [
+      { "questionId": "bible_001", "selected": 1, "correct": true },
+      { "questionId": "bible_002", "selected": 1, "correct": true },
+      { "questionId": "bible_003", "selected": 2, "correct": true },
+      { "questionId": "bible_004", "selected": 2, "correct": true },
+      { "questionId": "bible_005", "selected": 3, "correct": true },
+      { "questionId": "bible_006", "selected": 2, "correct": true },
+      { "questionId": "bible_007", "selected": 1, "correct": true },
+      { "questionId": "bible_008", "selected": 1, "correct": true },
+      { "questionId": "bible_009", "selected": 2, "correct": true },
+      { "questionId": "bible_010", "selected": 0, "correct": false }
+    ]
+  },
+  {
+    "nickname": "민준",
+    "category": "nba",
+    "score": 9,
+    "totalTime": 165,
+    "date": "2026-06-11",
+    "answers": [
+      { "questionId": "nba_001", "selected": 2, "correct": true },
+      { "questionId": "nba_002", "selected": 0, "correct": true },
+      { "questionId": "nba_003", "selected": 2, "correct": true },
+      { "questionId": "nba_004", "selected": 2, "correct": true },
+      { "questionId": "nba_005", "selected": 0, "correct": true },
+      { "questionId": "nba_006", "selected": 2, "correct": true },
+      { "questionId": "nba_007", "selected": 2, "correct": true },
+      { "questionId": "nba_008", "selected": 1, "correct": true },
+      { "questionId": "nba_009", "selected": 2, "correct": true },
+      { "questionId": "nba_010", "selected": 0, "correct": false }
+    ]
+  },
+  {
+    "nickname": "민준",
+    "category": "hiphop",
+    "score": 7,
+    "totalTime": 180,
+    "date": "2026-06-12",
+    "answers": [
+      { "questionId": "hiphop_001", "selected": 1, "correct": true },
+      { "questionId": "hiphop_002", "selected": 2, "correct": true },
+      { "questionId": "hiphop_003", "selected": 1, "correct": true },
+      { "questionId": "hiphop_004", "selected": 0, "correct": false },
+      { "questionId": "hiphop_005", "selected": 2, "correct": true },
+      { "questionId": "hiphop_006", "selected": 2, "correct": true },
+      { "questionId": "hiphop_007", "selected": 0, "correct": false },
+      { "questionId": "hiphop_008", "selected": 1, "correct": true },
+      { "questionId": "hiphop_009", "selected": 1, "correct": true },
+      { "questionId": "hiphop_010", "selected": 0, "correct": false }
+    ]
+  },
+  {
+    "nickname": "서연",
+    "category": "bible",
+    "score": 9,
+    "totalTime": 130,
+    "date": "2026-06-10",
+    "answers": [
+      { "questionId": "bible_001", "selected": 1, "correct": true },
+      { "questionId": "bible_002", "selected": 1, "correct": true },
+      { "questionId": "bible_003", "selected": 2, "correct": true },
+      { "questionId": "bible_004", "selected": 2, "correct": true },
+      { "questionId": "bible_005", "selected": 3, "correct": true },
+      { "questionId": "bible_006", "selected": 2, "correct": true },
+      { "questionId": "bible_007", "selected": 1, "correct": true },
+      { "questionId": "bible_008", "selected": 1, "correct": true },
+      { "questionId": "bible_009", "selected": 2, "correct": true },
+      { "questionId": "bible_010", "selected": 0, "correct": false }
+    ]
+  },
+  {
+    "nickname": "서연",
+    "category": "hiphop",
+    "score": 10,
+    "totalTime": 155,
+    "date": "2026-06-11",
+    "answers": [
+      { "questionId": "hiphop_001", "selected": 1, "correct": true },
+      { "questionId": "hiphop_002", "selected": 2, "correct": true },
+      { "questionId": "hiphop_003", "selected": 1, "correct": true },
+      { "questionId": "hiphop_004", "selected": 2, "correct": true },
+      { "questionId": "hiphop_005", "selected": 2, "correct": true },
+      { "questionId": "hiphop_006", "selected": 2, "correct": true },
+      { "questionId": "hiphop_007", "selected": 2, "correct": true },
+      { "questionId": "hiphop_008", "selected": 1, "correct": true },
+      { "questionId": "hiphop_009", "selected": 1, "correct": true },
+      { "questionId": "hiphop_010", "selected": 2, "correct": true }
+    ]
+  },
+  {
+    "nickname": "서연",
+    "category": "mlb",
+    "score": 6,
+    "totalTime": 190,
+    "date": "2026-06-13",
+    "answers": [
+      { "questionId": "mlb_001", "selected": 2, "correct": true },
+      { "questionId": "mlb_002", "selected": 0, "correct": false },
+      { "questionId": "mlb_003", "selected": 2, "correct": true },
+      { "questionId": "mlb_004", "selected": 1, "correct": true },
+      { "questionId": "mlb_005", "selected": 0, "correct": true },
+      { "questionId": "mlb_006", "selected": 2, "correct": true },
+      { "questionId": "mlb_007", "selected": 0, "correct": false },
+      { "questionId": "mlb_008", "selected": 0, "correct": false },
+      { "questionId": "mlb_009", "selected": 1, "correct": true },
+      { "questionId": "mlb_010", "selected": 0, "correct": false }
+    ]
+  },
+  {
+    "nickname": "지호",
+    "category": "nba",
+    "score": 10,
+    "totalTime": 120,
+    "date": "2026-06-10",
+    "answers": [
+      { "questionId": "nba_001", "selected": 2, "correct": true },
+      { "questionId": "nba_002", "selected": 0, "correct": true },
+      { "questionId": "nba_003", "selected": 2, "correct": true },
+      { "questionId": "nba_004", "selected": 2, "correct": true },
+      { "questionId": "nba_005", "selected": 0, "correct": true },
+      { "questionId": "nba_006", "selected": 2, "correct": true },
+      { "questionId": "nba_007", "selected": 2, "correct": true },
+      { "questionId": "nba_008", "selected": 1, "correct": true },
+      { "questionId": "nba_009", "selected": 2, "correct": true },
+      { "questionId": "nba_010", "selected": 1, "correct": true }
+    ]
+  },
+  {
+    "nickname": "지호",
+    "category": "mlb",
+    "score": 8,
+    "totalTime": 150,
+    "date": "2026-06-12",
+    "answers": [
+      { "questionId": "mlb_001", "selected": 2, "correct": true },
+      { "questionId": "mlb_002", "selected": 2, "correct": true },
+      { "questionId": "mlb_003", "selected": 2, "correct": true },
+      { "questionId": "mlb_004", "selected": 1, "correct": true },
+      { "questionId": "mlb_005", "selected": 0, "correct": true },
+      { "questionId": "mlb_006", "selected": 2, "correct": true },
+      { "questionId": "mlb_007", "selected": 1, "correct": true },
+      { "questionId": "mlb_008", "selected": 0, "correct": false },
+      { "questionId": "mlb_009", "selected": 0, "correct": false },
+      { "questionId": "mlb_010", "selected": 2, "correct": true }
+    ]
+  },
+  {
+    "nickname": "지호",
+    "category": "bible",
+    "score": 5,
+    "totalTime": 200,
+    "date": "2026-06-14",
+    "answers": [
+      { "questionId": "bible_001", "selected": 1, "correct": true },
+      { "questionId": "bible_002", "selected": 0, "correct": false },
+      { "questionId": "bible_003", "selected": 2, "correct": true },
+      { "questionId": "bible_004", "selected": 2, "correct": true },
+      { "questionId": "bible_005", "selected": 0, "correct": false },
+      { "questionId": "bible_006", "selected": 0, "correct": false },
+      { "questionId": "bible_007", "selected": 0, "correct": false },
+      { "questionId": "bible_008", "selected": 1, "correct": true },
+      { "questionId": "bible_009", "selected": 2, "correct": true },
+      { "questionId": "bible_010", "selected": 0, "correct": false }
+    ]
+  },
+  {
+    "nickname": "하은",
+    "category": "hiphop",
+    "score": 8,
+    "totalTime": 170,
+    "date": "2026-06-11",
+    "answers": [
+      { "questionId": "hiphop_001", "selected": 1, "correct": true },
+      { "questionId": "hiphop_002", "selected": 2, "correct": true },
+      { "questionId": "hiphop_003", "selected": 1, "correct": true },
+      { "questionId": "hiphop_004", "selected": 2, "correct": true },
+      { "questionId": "hiphop_005", "selected": 2, "correct": true },
+      { "questionId": "hiphop_006", "selected": 2, "correct": true },
+      { "questionId": "hiphop_007", "selected": 0, "correct": false },
+      { "questionId": "hiphop_008", "selected": 1, "correct": true },
+      { "questionId": "hiphop_009", "selected": 0, "correct": false },
+      { "questionId": "hiphop_010", "selected": 2, "correct": true }
+    ]
+  },
+  {
+    "nickname": "하은",
+    "category": "nba",
+    "score": 7,
+    "totalTime": 185,
+    "date": "2026-06-13",
+    "answers": [
+      { "questionId": "nba_001", "selected": 2, "correct": true },
+      { "questionId": "nba_002", "selected": 0, "correct": true },
+      { "questionId": "nba_003", "selected": 0, "correct": false },
+      { "questionId": "nba_004", "selected": 2, "correct": true },
+      { "questionId": "nba_005", "selected": 0, "correct": true },
+      { "questionId": "nba_006", "selected": 2, "correct": true },
+      { "questionId": "nba_007", "selected": 0, "correct": false },
+      { "questionId": "nba_008", "selected": 1, "correct": true },
+      { "questionId": "nba_009", "selected": 0, "correct": false },
+      { "questionId": "nba_010", "selected": 1, "correct": true }
+    ]
+  },
+  {
+    "nickname": "하은",
+    "category": "mlb",
+    "score": 9,
+    "totalTime": 140,
+    "date": "2026-06-15",
+    "answers": [
+      { "questionId": "mlb_001", "selected": 2, "correct": true },
+      { "questionId": "mlb_002", "selected": 2, "correct": true },
+      { "questionId": "mlb_003", "selected": 2, "correct": true },
+      { "questionId": "mlb_004", "selected": 1, "correct": true },
+      { "questionId": "mlb_005", "selected": 0, "correct": true },
+      { "questionId": "mlb_006", "selected": 2, "correct": true },
+      { "questionId": "mlb_007", "selected": 1, "correct": true },
+      { "questionId": "mlb_008", "selected": 2, "correct": true },
+      { "questionId": "mlb_009", "selected": 0, "correct": false },
+      { "questionId": "mlb_010", "selected": 2, "correct": true }
+    ]
+  },
+  {
+    "nickname": "도윤",
+    "category": "bible",
+    "score": 6,
+    "totalTime": 195,
+    "date": "2026-06-11",
+    "answers": [
+      { "questionId": "bible_001", "selected": 1, "correct": true },
+      { "questionId": "bible_002", "selected": 1, "correct": true },
+      { "questionId": "bible_003", "selected": 0, "correct": false },
+      { "questionId": "bible_004", "selected": 2, "correct": true },
+      { "questionId": "bible_005", "selected": 0, "correct": false },
+      { "questionId": "bible_006", "selected": 2, "correct": true },
+      { "questionId": "bible_007", "selected": 0, "correct": false },
+      { "questionId": "bible_008", "selected": 0, "correct": false },
+      { "questionId": "bible_009", "selected": 2, "correct": true },
+      { "questionId": "bible_010", "selected": 2, "correct": true }
+    ]
+  },
+  {
+    "nickname": "도윤",
+    "category": "mlb",
+    "score": 7,
+    "totalTime": 175,
+    "date": "2026-06-12",
+    "answers": [
+      { "questionId": "mlb_001", "selected": 2, "correct": true },
+      { "questionId": "mlb_002", "selected": 2, "correct": true },
+      { "questionId": "mlb_003", "selected": 0, "correct": false },
+      { "questionId": "mlb_004", "selected": 0, "correct": false },
+      { "questionId": "mlb_005", "selected": 0, "correct": true },
+      { "questionId": "mlb_006", "selected": 2, "correct": true },
+      { "questionId": "mlb_007", "selected": 1, "correct": true },
+      { "questionId": "mlb_008", "selected": 2, "correct": true },
+      { "questionId": "mlb_009", "selected": 0, "correct": false },
+      { "questionId": "mlb_010", "selected": 2, "correct": true }
+    ]
+  },
+  {
+    "nickname": "도윤",
+    "category": "nba",
+    "score": 6,
+    "totalTime": 200,
+    "date": "2026-06-14",
+    "answers": [
+      { "questionId": "nba_001", "selected": 2, "correct": true },
+      { "questionId": "nba_002", "selected": 1, "correct": false },
+      { "questionId": "nba_003", "selected": 2, "correct": true },
+      { "questionId": "nba_004", "selected": 2, "correct": true },
+      { "questionId": "nba_005", "selected": 0, "correct": true },
+      { "questionId": "nba_006", "selected": 2, "correct": true },
+      { "questionId": "nba_007", "selected": 0, "correct": false },
+      { "questionId": "nba_008", "selected": 0, "correct": false },
+      { "questionId": "nba_009", "selected": 0, "correct": false },
+      { "questionId": "nba_010", "selected": 1, "correct": true }
+    ]
+  },
+  {
+    "nickname": "도윤",
+    "category": "hiphop",
+    "score": 5,
+    "totalTime": 195,
+    "date": "2026-06-15",
+    "answers": [
+      { "questionId": "hiphop_001", "selected": 1, "correct": true },
+      { "questionId": "hiphop_002", "selected": 0, "correct": false },
+      { "questionId": "hiphop_003", "selected": 1, "correct": true },
+      { "questionId": "hiphop_004", "selected": 0, "correct": false },
+      { "questionId": "hiphop_005", "selected": null, "correct": false },
+      { "questionId": "hiphop_006", "selected": 2, "correct": true },
+      { "questionId": "hiphop_007", "selected": 0, "correct": false },
+      { "questionId": "hiphop_008", "selected": 1, "correct": true },
+      { "questionId": "hiphop_009", "selected": 1, "correct": true },
+      { "questionId": "hiphop_010", "selected": 0, "correct": false }
+    ]
+  }
+]
