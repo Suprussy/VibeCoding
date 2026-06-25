@@ -1,0 +1,1 @@
+- [냉장고 레시피 앱 프로젝트 컨텍스트](project_fridge_recipe.md) — Next.js 14 + Tailwind 기반 한국어 레시피 앱; 디자인 시스템 패턴 및 UX 개선 이력

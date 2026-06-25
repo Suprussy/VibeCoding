@@ -1,0 +1,1 @@
+- [냉장고 레시피 Next.js 앱 컨텍스트](project_fridge_recipe_app.md) — Study-04 앱의 아키텍처/세션/LLM 라우트 패턴 요약
