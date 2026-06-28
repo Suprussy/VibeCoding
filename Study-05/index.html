@@ -1,0 +1,1154 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>오늘의 일기 — AI 공감 다이어리</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@300;400;500;600;700&family=Noto+Sans+KR:wght@300;400;500&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ── Reset & Base ─────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --cream:       #fdf6ec;
+      --parchment:   #f5e9d3;
+      --tan:         #e8d5b7;
+      --brown-light: #c9a87c;
+      --brown:       #8b6240;
+      --brown-dark:  #5c3d1e;
+      --rose:        #e8a0a0;
+      --rose-dark:   #c97a7a;
+      --blush:       #f5d0d0;
+      --sage:        #b5c9b0;
+      --sage-dark:   #7a9e74;
+      --lavender:    #c9bedd;
+      --ink:         #3d2b1a;
+      --ink-soft:    #6b4c30;
+      --line-color:  #e0cdb3;
+      --shadow:      rgba(90, 50, 10, 0.10);
+      --shadow-deep: rgba(90, 50, 10, 0.18);
+    }
+
+    html { font-size: 16px; scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Noto Serif KR', 'Georgia', serif;
+      background-color: var(--cream);
+      color: var(--ink);
+      min-height: 100vh;
+      padding: 0;
+      overflow-x: hidden;
+      background-image:
+        radial-gradient(ellipse at 20% 10%, rgba(232, 208, 183, 0.45) 0%, transparent 55%),
+        radial-gradient(ellipse at 80% 85%, rgba(201, 190, 221, 0.30) 0%, transparent 50%),
+        radial-gradient(ellipse at 60% 40%, rgba(181, 201, 176, 0.20) 0%, transparent 45%);
+    }
+
+    /* ── Page wrapper ─────────────────────────────────────────── */
+    .page-wrapper {
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 2rem 1.25rem 4rem;
+    }
+
+    /* ── Header ───────────────────────────────────────────────── */
+    .app-header {
+      text-align: center;
+      padding: 2.5rem 0 2rem;
+      position: relative;
+    }
+
+    .header-deco {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.6rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .header-deco svg {
+      width: 28px;
+      height: 28px;
+      flex-shrink: 0;
+      filter: drop-shadow(0 1px 2px rgba(139, 98, 64, 0.25));
+    }
+
+    .app-title {
+      font-size: 2.1rem;
+      font-weight: 700;
+      color: var(--brown-dark);
+      letter-spacing: 0.04em;
+      text-shadow: 1px 2px 4px rgba(92, 61, 30, 0.12);
+      line-height: 1.15;
+    }
+
+    .app-subtitle {
+      font-family: 'Noto Sans KR', sans-serif;
+      font-size: 0.82rem;
+      font-weight: 300;
+      color: var(--ink-soft);
+      letter-spacing: 0.06em;
+      margin-top: 0.3rem;
+      opacity: 0.8;
+    }
+
+    .today-date {
+      display: inline-block;
+      margin-top: 0.9rem;
+      padding: 0.3rem 1.1rem;
+      background: var(--parchment);
+      border: 1px solid var(--tan);
+      border-radius: 20px;
+      font-family: 'Noto Sans KR', sans-serif;
+      font-size: 0.78rem;
+      font-weight: 400;
+      color: var(--brown);
+      letter-spacing: 0.05em;
+      box-shadow: 0 1px 4px var(--shadow);
+    }
+
+    .header-rule {
+      width: 80px;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--brown-light), transparent);
+      margin: 1.4rem auto 0;
+      border: none;
+    }
+
+    /* ── Input Card ───────────────────────────────────────────── */
+    .input-card {
+      background: #fffdf7;
+      border: 1px solid var(--tan);
+      border-radius: 16px;
+      padding: 2rem 2rem 1.6rem;
+      box-shadow:
+        0 4px 18px var(--shadow),
+        0 1px 4px rgba(0,0,0,0.04),
+        inset 0 1px 0 rgba(255,255,255,0.9);
+      position: relative;
+      overflow: hidden;
+      margin-bottom: 1.5rem;
+    }
+
+    .input-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--rose), var(--brown-light), var(--sage));
+      border-radius: 16px 16px 0 0;
+    }
+
+    .input-card::after {
+      content: '';
+      position: absolute;
+      left: 52px;
+      top: 0; bottom: 0;
+      width: 1px;
+      background: rgba(232, 160, 160, 0.25);
+    }
+
+    .input-prompt {
+      font-size: 1.02rem;
+      font-weight: 500;
+      color: var(--brown);
+      margin-bottom: 1.1rem;
+      padding-left: 0;
+      line-height: 1.6;
+    }
+
+    /* Lined textarea wrapper */
+    .textarea-wrap {
+      position: relative;
+      margin-bottom: 1.3rem;
+    }
+
+    .diary-textarea {
+      width: 100%;
+      min-height: 90px;
+      max-height: 180px;
+      resize: vertical;
+      border: none;
+      border-bottom: 2px solid var(--tan);
+      border-radius: 0;
+      background: transparent;
+      font-family: 'Noto Serif KR', serif;
+      font-size: 1rem;
+      font-weight: 400;
+      color: var(--ink);
+      line-height: 2.1;
+      padding: 0.2rem 0.4rem;
+      outline: none;
+      transition: border-color 0.25s ease;
+      background-image: repeating-linear-gradient(
+        to bottom,
+        transparent,
+        transparent calc(2.1em - 1px),
+        var(--line-color) calc(2.1em - 1px),
+        var(--line-color) 2.1em
+      );
+      background-size: 100% 2.1em;
+      background-position: 0 0.2rem;
+    }
+
+    .diary-textarea:focus {
+      border-bottom-color: var(--brown-light);
+      box-shadow: 0 2px 0 var(--rose);
+    }
+
+    .diary-textarea::placeholder {
+      color: var(--brown-light);
+      font-style: italic;
+      opacity: 0.75;
+    }
+
+    .diary-textarea:disabled {
+      opacity: 0.55;
+      cursor: not-allowed;
+    }
+
+    .char-count {
+      font-family: 'Noto Sans KR', sans-serif;
+      font-size: 0.72rem;
+      color: var(--brown-light);
+      text-align: right;
+      margin-top: 0.35rem;
+      transition: color 0.2s;
+    }
+
+    .char-count.warn { color: var(--rose-dark); }
+
+    /* Submit button */
+    .btn-submit {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      width: 100%;
+      padding: 0.78rem 1.5rem;
+      background: linear-gradient(135deg, #c97a7a 0%, #b5856e 50%, #a0826d 100%);
+      color: #fff;
+      border: none;
+      border-radius: 12px;
+      font-family: 'Noto Serif KR', serif;
+      font-size: 1rem;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      cursor: pointer;
+      box-shadow: 0 3px 10px rgba(180, 100, 80, 0.35), 0 1px 3px rgba(0,0,0,0.08);
+      transition: transform 0.18s ease, box-shadow 0.18s ease, opacity 0.18s ease, filter 0.18s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn-submit::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to bottom, rgba(255,255,255,0.15), transparent);
+      border-radius: inherit;
+      pointer-events: none;
+    }
+
+    .btn-submit:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 18px rgba(180, 100, 80, 0.40), 0 2px 5px rgba(0,0,0,0.10);
+    }
+
+    .btn-submit:active:not(:disabled) {
+      transform: translateY(0px);
+      box-shadow: 0 2px 6px rgba(180, 100, 80, 0.30);
+    }
+
+    .btn-submit:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      filter: grayscale(0.25);
+    }
+
+    .btn-submit svg {
+      width: 18px;
+      height: 18px;
+    }
+
+    /* ── Loading ──────────────────────────────────────────────── */
+    .loading-section {
+      display: none;
+      text-align: center;
+      padding: 2.5rem 1rem 2rem;
+      animation: fadeIn 0.4s ease;
+    }
+
+    .loading-section.visible { display: block; }
+
+    .loading-dots {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.55rem;
+      margin-bottom: 1.1rem;
+    }
+
+    .loading-dots span {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--brown-light);
+      display: inline-block;
+      animation: bounce 1.35s ease-in-out infinite;
+    }
+
+    .loading-dots span:nth-child(1) { animation-delay: 0s;    background: var(--rose); }
+    .loading-dots span:nth-child(2) { animation-delay: 0.18s; background: var(--brown-light); }
+    .loading-dots span:nth-child(3) { animation-delay: 0.36s; background: var(--sage); }
+
+    @keyframes bounce {
+      0%, 80%, 100% { transform: scale(0.75); opacity: 0.55; }
+      40%            { transform: scale(1.20); opacity: 1;    }
+    }
+
+    .loading-text {
+      font-size: 0.95rem;
+      color: var(--brown);
+      font-style: italic;
+      letter-spacing: 0.04em;
+    }
+
+    .loading-text span {
+      display: inline-block;
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50%       { opacity: 0.4; }
+    }
+
+    /* ── Response Card ────────────────────────────────────────── */
+    .response-section {
+      display: none;
+      animation: slideUp 0.45s cubic-bezier(0.22, 0.61, 0.36, 1) both;
+    }
+
+    .response-section.visible { display: block; }
+
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(22px); }
+      to   { opacity: 1; transform: translateY(0);    }
+    }
+
+    .response-card {
+      background: #fffdf7;
+      border: 1px solid var(--tan);
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 6px 24px var(--shadow-deep), 0 1px 4px rgba(0,0,0,0.05);
+      margin-bottom: 1.5rem;
+    }
+
+    .response-header {
+      padding: 1.4rem 1.8rem 1.2rem;
+      background: linear-gradient(135deg, var(--parchment) 0%, var(--blush) 100%);
+      border-bottom: 1px solid var(--tan);
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .emotion-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.32rem 0.9rem;
+      background: #fff;
+      border: 1.5px solid var(--rose);
+      border-radius: 20px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--brown-dark);
+      box-shadow: 0 2px 6px rgba(201, 122, 122, 0.18);
+      white-space: nowrap;
+    }
+
+    .emotion-emoji-large {
+      font-size: 2rem;
+      line-height: 1;
+      flex-shrink: 0;
+    }
+
+    .response-label {
+      font-family: 'Noto Sans KR', sans-serif;
+      font-size: 0.75rem;
+      font-weight: 300;
+      color: var(--ink-soft);
+      letter-spacing: 0.08em;
+      opacity: 0.7;
+      margin-bottom: 0.25rem;
+    }
+
+    .response-body {
+      padding: 1.5rem 1.8rem;
+    }
+
+    .empathy-block {
+      padding: 1.1rem 1.3rem;
+      background: linear-gradient(135deg, rgba(245,208,208,0.3) 0%, rgba(253,246,236,0.6) 100%);
+      border-left: 3px solid var(--rose);
+      border-radius: 0 10px 10px 0;
+      margin-bottom: 1rem;
+    }
+
+    .empathy-block p {
+      font-size: 0.97rem;
+      line-height: 1.85;
+      color: var(--ink);
+      font-weight: 400;
+    }
+
+    .response-divider {
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+      margin: 1rem 0;
+      color: var(--tan);
+    }
+
+    .response-divider::before,
+    .response-divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--tan);
+    }
+
+    .response-divider span {
+      font-size: 0.85rem;
+    }
+
+    .comfort-block {
+      padding: 1.1rem 1.3rem;
+      background: linear-gradient(135deg, rgba(181,201,176,0.22) 0%, rgba(201,190,221,0.18) 100%);
+      border-left: 3px solid var(--sage);
+      border-radius: 0 10px 10px 0;
+    }
+
+    .comfort-block p {
+      font-size: 0.97rem;
+      line-height: 1.85;
+      color: var(--ink);
+      font-weight: 400;
+    }
+
+    .btn-reset {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.4rem;
+      width: 100%;
+      padding: 0.7rem 1.5rem;
+      background: transparent;
+      color: var(--brown);
+      border: 1.5px solid var(--brown-light);
+      border-radius: 12px;
+      font-family: 'Noto Serif KR', serif;
+      font-size: 0.92rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s, border-color 0.2s, transform 0.15s;
+      letter-spacing: 0.04em;
+    }
+
+    .btn-reset:hover {
+      background: var(--parchment);
+      border-color: var(--brown);
+      transform: translateY(-1px);
+    }
+
+    .btn-reset svg {
+      width: 15px;
+      height: 15px;
+    }
+
+    /* ── Entry entry text (submitted) ────────────────────────── */
+    .submitted-entry {
+      padding: 0.8rem 1.8rem 0;
+      display: flex;
+      align-items: flex-start;
+      gap: 0.6rem;
+    }
+
+    .submitted-entry .quote-mark {
+      font-size: 1.6rem;
+      color: var(--rose);
+      line-height: 1;
+      margin-top: -2px;
+      flex-shrink: 0;
+    }
+
+    .submitted-entry p {
+      font-size: 0.93rem;
+      color: var(--ink-soft);
+      font-style: italic;
+      line-height: 1.6;
+    }
+
+    /* ── Past Entries ─────────────────────────────────────────── */
+    .past-section {
+      margin-top: 2.5rem;
+    }
+
+    .past-section-header {
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+      margin-bottom: 1rem;
+    }
+
+    .past-section-title {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--brown);
+      letter-spacing: 0.07em;
+    }
+
+    .past-section-line {
+      flex: 1;
+      height: 1px;
+      background: var(--tan);
+    }
+
+    .past-entries-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.7rem;
+      max-height: 380px;
+      overflow-y: auto;
+      padding-right: 4px;
+    }
+
+    .past-entries-list::-webkit-scrollbar { width: 4px; }
+    .past-entries-list::-webkit-scrollbar-track { background: transparent; }
+    .past-entries-list::-webkit-scrollbar-thumb { background: var(--tan); border-radius: 4px; }
+
+    .entry-item {
+      display: flex;
+      align-items: center;
+      gap: 0.9rem;
+      padding: 0.85rem 1.1rem;
+      background: #fffdf7;
+      border: 1px solid var(--tan);
+      border-radius: 12px;
+      transition: box-shadow 0.2s, transform 0.2s;
+      animation: fadeIn 0.35s ease both;
+    }
+
+    .entry-item:hover {
+      box-shadow: 0 3px 12px var(--shadow);
+      transform: translateY(-1px);
+    }
+
+    .entry-emoji {
+      font-size: 1.4rem;
+      flex-shrink: 0;
+      width: 36px;
+      text-align: center;
+    }
+
+    .entry-content {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .entry-text {
+      font-size: 0.88rem;
+      color: var(--ink);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      line-height: 1.45;
+    }
+
+    .entry-meta {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-top: 0.2rem;
+    }
+
+    .entry-time {
+      font-family: 'Noto Sans KR', sans-serif;
+      font-size: 0.7rem;
+      color: var(--brown-light);
+      letter-spacing: 0.04em;
+    }
+
+    .entry-emotion-tag {
+      font-family: 'Noto Sans KR', sans-serif;
+      font-size: 0.68rem;
+      color: var(--rose-dark);
+      background: var(--blush);
+      padding: 0.1rem 0.5rem;
+      border-radius: 10px;
+      letter-spacing: 0.03em;
+      font-weight: 500;
+    }
+
+    .no-entries {
+      text-align: center;
+      padding: 1.5rem;
+      color: var(--brown-light);
+      font-size: 0.88rem;
+      font-style: italic;
+    }
+
+    .btn-delete-entry {
+      flex-shrink: 0;
+      width: 24px;
+      height: 24px;
+      border: none;
+      background: transparent;
+      color: var(--brown-light);
+      cursor: pointer;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+      line-height: 1;
+      transition: background 0.15s, color 0.15s;
+      padding: 0;
+    }
+
+    .btn-delete-entry:hover {
+      background: var(--blush);
+      color: var(--rose-dark);
+    }
+
+    /* ── Utilities ────────────────────────────────────────────── */
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to   { opacity: 1; }
+    }
+
+    .visually-hidden {
+      position: absolute;
+      width: 1px; height: 1px;
+      padding: 0; margin: -1px;
+      overflow: hidden;
+      clip: rect(0,0,0,0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    /* ── API Key ─────────────────────────────────────────────── */
+    .apikey-card {
+      background: #fffdf7;
+      border: 1px solid var(--tan);
+      border-radius: 12px;
+      padding: 0.9rem 1.2rem;
+      margin-bottom: 1.2rem;
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+      box-shadow: 0 2px 8px var(--shadow);
+    }
+
+    .apikey-label {
+      font-family: 'Noto Sans KR', sans-serif;
+      font-size: 0.72rem;
+      font-weight: 500;
+      color: var(--brown);
+      letter-spacing: 0.06em;
+      white-space: nowrap;
+    }
+
+    .apikey-input {
+      flex: 1;
+      border: none;
+      border-bottom: 1.5px solid var(--tan);
+      background: transparent;
+      font-family: 'Noto Sans KR', sans-serif;
+      font-size: 0.82rem;
+      color: var(--ink);
+      padding: 0.2rem 0.3rem;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .apikey-input:focus { border-bottom-color: var(--brown-light); }
+    .apikey-input.saved { border-bottom-color: var(--sage-dark); }
+
+    .apikey-status {
+      font-size: 0.78rem;
+      white-space: nowrap;
+      color: var(--brown-light);
+      transition: color 0.2s;
+    }
+
+    .apikey-status.ok { color: var(--sage-dark); }
+
+    /* ── Responsive ───────────────────────────────────────────── */
+    @media (max-width: 500px) {
+      .app-title   { font-size: 1.7rem; }
+      .input-card  { padding: 1.4rem 1.2rem 1.3rem; }
+      .response-header { padding: 1.1rem 1.2rem; }
+      .response-body   { padding: 1.2rem 1.2rem; }
+      .submitted-entry { padding: 0.6rem 1.2rem 0; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="page-wrapper">
+
+  <!-- ── Header ── -->
+  <header class="app-header">
+    <div class="header-deco">
+      <!-- Pen icon -->
+      <svg viewBox="0 0 24 24" fill="none" stroke="#c97a7a" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M12 20h9"/>
+        <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
+      </svg>
+
+      <h1 class="app-title">오늘의 일기</h1>
+
+      <!-- Heart icon -->
+      <svg viewBox="0 0 24 24" fill="#e8a0a0" stroke="#c97a7a" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+      </svg>
+    </div>
+
+    <p class="app-subtitle">AI 공감 다이어리</p>
+    <div class="today-date" id="todayDate">날짜 불러오는 중...</div>
+    <hr class="header-rule" />
+  </header>
+
+  <!-- ── API Key ── -->
+  <div class="apikey-card">
+    <span class="apikey-label">API 키</span>
+    <input type="password" class="apikey-input" id="apikeyInput"
+      placeholder="sk-or-v1-..." autocomplete="off" spellcheck="false" />
+    <span class="apikey-status" id="apikeyStatus">미저장</span>
+  </div>
+
+  <!-- ── Input Section ── -->
+  <section class="input-card" id="inputSection" aria-label="일기 입력">
+    <p class="input-prompt">오늘 하루 어떠셨나요? 한 줄로 써보세요 ✍️</p>
+
+    <div class="textarea-wrap">
+      <label for="diaryInput" class="visually-hidden">일기 입력란</label>
+      <textarea
+        id="diaryInput"
+        class="diary-textarea"
+        placeholder="오늘 있었던 일, 감정, 생각을 자유롭게 적어보세요..."
+        rows="3"
+        maxlength="300"
+        spellcheck="false"
+        autocomplete="off"
+      ></textarea>
+      <div class="char-count" id="charCount">0 / 300</div>
+    </div>
+
+    <button class="btn-submit" id="submitBtn" type="button" aria-label="AI에게 일기 보내기">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <line x1="22" y1="2" x2="11" y2="13"/>
+        <polygon points="22 2 15 22 11 13 2 9 22 2"/>
+      </svg>
+      AI에게 보내기
+    </button>
+  </section>
+
+  <!-- ── Loading ── -->
+  <section class="loading-section" id="loadingSection" aria-live="polite" aria-label="로딩 중">
+    <div class="loading-dots">
+      <span></span><span></span><span></span>
+    </div>
+    <p class="loading-text"><span>감정을 분석하는 중...</span></p>
+  </section>
+
+  <!-- ── Response ── -->
+  <section class="response-section" id="responseSection" aria-label="AI 공감 응답">
+    <div class="response-card">
+
+      <!-- Submitted entry display -->
+      <div class="submitted-entry" id="submittedEntry">
+        <span class="quote-mark" aria-hidden="true">"</span>
+        <p id="submittedText"></p>
+      </div>
+
+      <div class="response-header">
+        <div class="emotion-emoji-large" id="emotionEmoji" aria-hidden="true"></div>
+        <div>
+          <div class="response-label">오늘의 감정</div>
+          <div class="emotion-pill" id="emotionPill"></div>
+        </div>
+      </div>
+
+      <div class="response-body">
+        <div class="response-label">공감 메시지</div>
+        <div class="empathy-block" id="empathyBlock">
+          <p id="empathyText"></p>
+        </div>
+
+        <div class="response-divider"><span>🌿</span></div>
+
+        <div class="response-label">위로의 말</div>
+        <div class="comfort-block" id="comfortBlock">
+          <p id="comfortText"></p>
+        </div>
+      </div>
+    </div>
+
+    <button class="btn-reset" id="resetBtn" type="button" aria-label="다시 쓰기">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <polyline points="1 4 1 10 7 10"/>
+        <path d="M3.51 15a9 9 0 1 0 .49-4.45"/>
+      </svg>
+      다시 쓰기
+    </button>
+  </section>
+
+  <!-- ── Past Entries ── -->
+  <section class="past-section" id="pastSection" aria-label="오늘의 기록">
+    <div class="past-section-header">
+      <span class="past-section-title">📖 오늘의 기록</span>
+      <div class="past-section-line"></div>
+    </div>
+    <div class="past-entries-list" id="pastEntriesList">
+      <p class="no-entries">아직 오늘의 기록이 없어요. 첫 일기를 써보세요! 🌸</p>
+    </div>
+  </section>
+
+</div><!-- /page-wrapper -->
+
+<script>
+/* ═══════════════════════════════════════════════════════════════
+   Backend logic (verbatim)
+═══════════════════════════════════════════════════════════════ */
+const OPENROUTER_BASE_URL = "https://openrouter.ai/api/v1";
+const LS_API_KEY = 'diary_api_key';
+function getApiKey() { return localStorage.getItem(LS_API_KEY) || ''; }
+const MODEL = "openrouter/owl-alpha";
+
+const SYSTEM_PROMPT = `You are a warm, empathetic AI diary companion. The user writes about their day in Korean.
+Respond ONLY with a valid JSON object — no extra text, no markdown, no explanation.
+
+Required format:
+{"emotion":"감정 키워드(한국어)","emotionEmoji":"이모지 1개","empathyMessage":"2~3문장의 한국어 공감 메시지","comfortMessage":"1~2문장의 한국어 위로 메시지"}
+
+Rules:
+- Output must be a single raw JSON object, nothing else.
+- All values must be non-empty strings.
+- empathyMessage and comfortMessage must be written in Korean.`;
+
+const FALLBACK_RESPONSE = {
+  emotion: "알 수 없음",
+  emotionEmoji: "🤍",
+  empathyMessage: "오늘 하루도 정말 수고하셨어요. 당신의 이야기를 들을 수 없어서 아쉽지만, 항상 응원하고 있어요.",
+  comfortMessage: "잠시 후 다시 시도해 주세요. 언제든지 당신의 이야기를 들을 준비가 되어 있어요."
+};
+
+function parseAIResponse(content) {
+  let cleaned = content.trim();
+  // Strip code fences
+  cleaned = cleaned.replace(/^```(?:json)?\s*/i, "").replace(/\s*```$/, "").trim();
+
+  let parsed;
+  try {
+    parsed = JSON.parse(cleaned);
+  } catch {
+    // Model returned extra text around JSON — extract the first {...} block
+    const match = cleaned.match(/\{[\s\S]*\}/);
+    if (!match) throw new Error("No JSON object found in AI response");
+    parsed = JSON.parse(match[0]);
+  }
+
+  if (
+    typeof parsed.emotion !== "string" || !parsed.emotion ||
+    typeof parsed.emotionEmoji !== "string" || !parsed.emotionEmoji ||
+    typeof parsed.empathyMessage !== "string" || !parsed.empathyMessage ||
+    typeof parsed.comfortMessage !== "string" || !parsed.comfortMessage
+  ) {
+    throw new Error("Invalid response structure from AI");
+  }
+  return {
+    emotion:       parsed.emotion,
+    emotionEmoji:  parsed.emotionEmoji,
+    empathyMessage: parsed.empathyMessage,
+    comfortMessage: parsed.comfortMessage
+  };
+}
+
+async function analyzeAndEmpathize(diaryText) {
+  try {
+    const response = await fetch(`${OPENROUTER_BASE_URL}/chat/completions`, {
+      method: "POST",
+      headers: {
+        "Authorization": `Bearer ${getApiKey()}`,
+        "Content-Type": "application/json",
+        "HTTP-Referer": "http://localhost",
+        "X-Title": "AI Empathy Diary"
+      },
+      body: JSON.stringify({
+        model: MODEL,
+        temperature: 0.7,
+        max_tokens: 500,
+        messages: [
+          { role: "system", content: SYSTEM_PROMPT },
+          { role: "user", content: diaryText }
+        ]
+      })
+    });
+    if (!response.ok) {
+      const errorBody = await response.text().catch(() => "");
+      throw new Error(`API request failed with status ${response.status}: ${errorBody}`);
+    }
+    const data = await response.json();
+    const content = data?.choices?.[0]?.message?.content;
+    if (!content) throw new Error("No content in API response");
+    console.log("[AI raw response]", content);
+    return parseAIResponse(content);
+  } catch (error) {
+    console.error("[analyzeAndEmpathize] Error:", error.message, error);
+    return { ...FALLBACK_RESPONSE };
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   Frontend logic
+═══════════════════════════════════════════════════════════════ */
+
+/* ── Date display ── */
+(function setDateDisplay() {
+  const el = document.getElementById("todayDate");
+  const now = new Date();
+  const year  = now.getFullYear();
+  const month = now.getMonth() + 1;
+  const day   = now.getDate();
+  const dayNames = ["일", "월", "화", "수", "목", "금", "토"];
+  const dow = dayNames[now.getDay()];
+  el.textContent = `${year}년 ${month}월 ${day}일 (${dow}요일)`;
+})();
+
+/* ── localStorage helpers ── */
+const STORAGE_KEY = "empathy_diary_entries";
+
+function todayKey() {
+  const d = new Date();
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
+}
+
+function loadEntries() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    return raw ? JSON.parse(raw) : {};
+  } catch { return {}; }
+}
+
+function saveEntry(text, result) {
+  const all = loadEntries();
+  const key = todayKey();
+  if (!all[key]) all[key] = [];
+  all[key].unshift({
+    text,
+    emotion:       result.emotion,
+    emotionEmoji:  result.emotionEmoji,
+    time:          new Date().toLocaleTimeString("ko-KR", { hour: "2-digit", minute: "2-digit" })
+  });
+  // keep only last 50 entries per day
+  all[key] = all[key].slice(0, 50);
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(all)); } catch(e) {}
+}
+
+function getTodayEntries() {
+  const all = loadEntries();
+  return all[todayKey()] || [];
+}
+
+/* ── Render past entries ── */
+function renderPastEntries() {
+  const list = document.getElementById("pastEntriesList");
+  const entries = getTodayEntries();
+
+  if (!entries.length) {
+    list.innerHTML = '<p class="no-entries">아직 오늘의 기록이 없어요. 첫 일기를 써보세요! 🌸</p>';
+    return;
+  }
+
+  list.innerHTML = entries.map((e, i) => `
+    <div class="entry-item" style="animation-delay:${i * 0.06}s">
+      <div class="entry-emoji" aria-hidden="true">${escHtml(e.emotionEmoji)}</div>
+      <div class="entry-content">
+        <div class="entry-text">${escHtml(e.text)}</div>
+        <div class="entry-meta">
+          <span class="entry-time">${escHtml(e.time)}</span>
+          <span class="entry-emotion-tag">${escHtml(e.emotion)}</span>
+        </div>
+      </div>
+      <button class="btn-delete-entry" onclick="deleteEntry(${i})" aria-label="기록 삭제" title="삭제">×</button>
+    </div>
+  `).join("");
+}
+
+function deleteEntry(index) {
+  const all = loadEntries();
+  const key = todayKey();
+  if (!all[key]) return;
+  all[key].splice(index, 1);
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(all)); } catch(e) {}
+  renderPastEntries();
+}
+
+function escHtml(str) {
+  return String(str)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
+/* ── UI state helpers ── */
+// Managed sections: inputSection is shown/hidden via display toggle;
+// loadingSection and responseSection use the .visible class + display toggle.
+function showSection(id) {
+  // Always hide loading and response first
+  ["loadingSection", "responseSection"].forEach(sid => {
+    const el = document.getElementById(sid);
+    el.classList.remove("visible");
+    el.style.display = "none";
+  });
+
+  // inputSection: show only when we're in "idle" or "reset" state
+  // (i.e., id === null means reset → show input; anything else → hide input)
+  const inputSection = document.getElementById("inputSection");
+  if (!id) {
+    // reset state: show input card
+    inputSection.style.display = "block";
+  } else {
+    // loading or response state: hide input card
+    inputSection.style.display = "none";
+  }
+
+  if (id) {
+    const target = document.getElementById(id);
+    target.style.display = "block";
+    // force reflow for animation restart
+    void target.offsetWidth;
+    target.classList.add("visible");
+  }
+}
+
+function setInputDisabled(disabled) {
+  document.getElementById("diaryInput").disabled = disabled;
+  document.getElementById("submitBtn").disabled  = disabled;
+}
+
+/* ── Char counter ── */
+(function setupCharCounter() {
+  const textarea = document.getElementById("diaryInput");
+  const counter  = document.getElementById("charCount");
+  textarea.addEventListener("input", () => {
+    const len = textarea.value.length;
+    counter.textContent = `${len} / 300`;
+    counter.classList.toggle("warn", len > 260);
+  });
+})();
+
+/* ── Submit handler ── */
+document.getElementById("submitBtn").addEventListener("click", handleSubmit);
+document.getElementById("diaryInput").addEventListener("keydown", function(e) {
+  // Ctrl+Enter or Cmd+Enter submits
+  if ((e.ctrlKey || e.metaKey) && e.key === "Enter") {
+    e.preventDefault();
+    handleSubmit();
+  }
+});
+
+async function handleSubmit() {
+  const textarea = document.getElementById("diaryInput");
+  const text = textarea.value.trim();
+
+  if (!text) {
+    textarea.focus();
+    textarea.style.borderBottomColor = "#c97a7a";
+    setTimeout(() => { textarea.style.borderBottomColor = ""; }, 1200);
+    return;
+  }
+
+  // --- UI: show loading ---
+  setInputDisabled(true);
+  showSection("loadingSection");
+
+  // --- Call AI ---
+  const result = await analyzeAndEmpathize(text);
+
+  // --- Save ---
+  saveEntry(text, result);
+
+  // --- Populate response card ---
+  document.getElementById("submittedText").textContent   = text;
+  document.getElementById("emotionEmoji").textContent    = result.emotionEmoji;
+  document.getElementById("emotionPill").textContent     = `${result.emotionEmoji} ${result.emotion}`;
+  document.getElementById("empathyText").textContent     = result.empathyMessage;
+  document.getElementById("comfortText").textContent     = result.comfortMessage;
+
+  // --- UI: show response ---
+  showSection("responseSection");
+  setInputDisabled(false);
+  textarea.value = "";
+  document.getElementById("charCount").textContent = "0 / 300";
+
+  // --- Refresh past entries ---
+  renderPastEntries();
+
+  // Scroll to response
+  document.getElementById("responseSection").scrollIntoView({ behavior: "smooth", block: "nearest" });
+}
+
+/* ── Reset handler ── */
+document.getElementById("resetBtn").addEventListener("click", function() {
+  setInputDisabled(false);
+  showSection(null);
+  const textarea = document.getElementById("diaryInput");
+  textarea.value = "";
+  document.getElementById("charCount").textContent = "0 / 300";
+  textarea.focus();
+});
+
+/* ── API Key UI ── */
+(function setupApiKey() {
+  const input = document.getElementById('apikeyInput');
+  const status = document.getElementById('apikeyStatus');
+
+  function applyStyle(key) {
+    if (key && key.startsWith('sk-or-') && key.length > 10) {
+      input.classList.add('saved');
+      status.className = 'apikey-status ok';
+      status.textContent = '저장됨 ✓';
+    } else {
+      input.classList.remove('saved');
+      status.className = 'apikey-status';
+      status.textContent = '미저장';
+    }
+  }
+
+  const saved = localStorage.getItem(LS_API_KEY);
+  if (saved) { input.value = saved; applyStyle(saved); }
+
+  input.addEventListener('input', () => {
+    const v = input.value.trim();
+    if (v.startsWith('sk-or-') && v.length > 10) localStorage.setItem(LS_API_KEY, v);
+    else localStorage.removeItem(LS_API_KEY);
+    applyStyle(v);
+  });
+})();
+
+/* ── Init ── */
+renderPastEntries();
+</script>
+</body>
+</html>

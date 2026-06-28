@@ -1,0 +1,1 @@
+- [Study-05 PDF Summarizer project](project-study05-pdf-summarizer.md) — single-file HTML app, PDF.js + OpenRouter, drag-counter fix + regex fix applied 2026-06-27

@@ -1,0 +1,2 @@
+- [User Role: VibeCoding Builder](user_role.md) — 단일 HTML 파일 프론트엔드 프로토타이핑 선호, 한국어 응답, 구체적 PRD 요구
+- [Project: PDF 요약 웹앱](project_pdf_summarizer.md) — index_pdf.html, PDF.js + OpenRouter(owl-alpha), 한국어 요약
